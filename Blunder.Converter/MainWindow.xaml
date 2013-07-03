@@ -1,0 +1,28 @@
+﻿<Window x:Class="ShogiCore.Converter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Blunder.Converter" Height="388" Width="645" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowDrop="True" Icon="/ShogiFileConverter;component/icon1.ico" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Closed="Window_Closed_1" DragOver="Window_DragOver_1" Drop="Window_Drop_1">
+    <Grid>
+        <GroupBox Header="棋譜一括変換" Height="174" HorizontalAlignment="Left" Margin="10,10,0,0" Name="groupBox1" VerticalAlignment="Top" Width="619">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="49*"/>
+                    <ColumnDefinition Width="538*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="変換元フォルダ：" Height="28" HorizontalAlignment="Left" Margin="6,6,0,0" Name="label1" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                <Label Content="変換先フォルダ：" Height="28" HorizontalAlignment="Left" Margin="6,40,0,0" Name="label2" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                <TextBox Height="24" HorizontalAlignment="Left" Margin="69,10,0,0" x:Name="textBoxSrc" VerticalAlignment="Top" Width="338" DragOver="textBoxSrc_DragOver" Drop="textBoxSrc_Drop" TextChanged="textBoxSrc_TextChanged" Grid.Column="1" AllowDrop="True" />
+                <TextBox Height="24" HorizontalAlignment="Left" Margin="69,44,0,0" x:Name="textBoxDst" VerticalAlignment="Top" Width="338" Grid.Column="1" />
+                <Button Content="..." Height="23" HorizontalAlignment="Left" Margin="411,11,0,0" Name="button1" VerticalAlignment="Top" Width="25" Click="button1_Click" Grid.Column="1" />
+                <Label Content="変換先形式：" Height="28" HorizontalAlignment="Left" Margin="6,74,0,0" Name="label3" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                <RadioButton Content="CSA" Height="16" HorizontalAlignment="Left" Margin="162,79,0,0" Name="radioButtonCSA" VerticalAlignment="Top" GroupName="ConvertType" Grid.Column="1" />
+                <RadioButton Content="KIF" GroupName="ConvertType" Height="16" HorizontalAlignment="Left" Margin="121,79,0,0" Name="radioButtonKIF" VerticalAlignment="Top" Grid.Column="1" />
+                <RadioButton Content="SFEN" GroupName="ConvertType" Height="16" HorizontalAlignment="Left" Margin="69,79,0,0" Name="radioButtonSFEN" VerticalAlignment="Top" IsChecked="True" Grid.Column="1" />
+                <Button Content="変換" Height="23" HorizontalAlignment="Left" Margin="157,110,0,0" Name="button2" VerticalAlignment="Top" Width="75" IsDefault="False" Click="button2_Click" Grid.Column="1" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="ログ" HorizontalAlignment="Left" Margin="10,189,0,0" VerticalAlignment="Top" Height="161" Width="619">
+            <TextBox x:Name="textBoxLog" HorizontalAlignment="Left" Height="135" TextWrapping="Wrap" VerticalAlignment="Top" Width="607" IsReadOnly="True" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" VerticalScrollBarVisibility="Visible" FontFamily="MS Gothic" FontSize="10"/>
+        </GroupBox>
+    </Grid>
+</Window>
