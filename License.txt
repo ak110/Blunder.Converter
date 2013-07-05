@@ -1,4 +1,5 @@
-いわゆる修正BSDライセンスとします。
+log4netのライセンスはlog4net/LICENSE.txtをご参照ください。
+それ以外の部分は、いわゆる修正BSDライセンスとします。
 
 Copyright 2006-2008 aki. All rights reserved.
 
