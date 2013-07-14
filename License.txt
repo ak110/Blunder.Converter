@@ -1,7 +1,7 @@
 log4netのライセンスはlog4net/LICENSE.txtをご参照ください。
 それ以外の部分は、いわゆる修正BSDライセンスとします。
 
-Copyright 2006-2008 aki. All rights reserved.
+Copyright 2013 aki. All rights reserved.
 
 ソースコード形式であれバイナリ形式であれ、変更の有無に関わらず、以下の
 条件を満たす限りにおいて、再配布および使用を許可します:
