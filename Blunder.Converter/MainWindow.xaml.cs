@@ -94,18 +94,18 @@ namespace ShogiCore.Converter {
         /// <param name="e"></param>
         private void button2_Click(object sender, RoutedEventArgs e) {
             if (radioButtonSFEN.IsChecked.Value) {
-                ConvertTo(new SFENNotationWriter(), ".sfen");
+                ConvertTo(new SFENNotationWriter(), ".sfen", checkBoxDivide.IsChecked.Value);
             } else if (radioButtonKIF.IsChecked.Value) {
-                ConvertTo(new KifuNotationWriter(KifuNotationWriter.Mode.KIF), ".kif");
+                ConvertTo(new KifuNotationWriter(KifuNotationWriter.Mode.KIF), ".kif", checkBoxDivide.IsChecked.Value);
             } else {
-                ConvertTo(new PCLNotationWriter(), ".csa");
+                ConvertTo(new PCLNotationWriter(), ".csa", checkBoxDivide.IsChecked.Value);
             }
         }
 
         /// <summary>
         /// 棋譜変換
         /// </summary>
-        private void ConvertTo(IStringNotationWriter notationWriter, string extension) {
+        private void ConvertTo(IStringNotationWriter notationWriter, string extension, bool divide) {
             string srcDir = System.IO.Path.GetFullPath(textBoxSrc.Text);
             string dstDir = System.IO.Path.GetFullPath(textBoxDst.Text);
 
@@ -122,9 +122,19 @@ namespace ShogiCore.Converter {
 
                 try {
                     string str = System.IO.File.ReadAllText(srcFile, Encoding.Default);
-                    string data = notationWriter.WriteToString(loader.Load(str));
-                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dstFile));
-                    System.IO.File.WriteAllText(dstFile, data, Encoding.Default);
+                    var notations = loader.Load(str);
+                    if (divide && 1 < notations.Count) {
+                        for (int i = 0; i < notations.Count; i++) {
+                            string dstFile2 = System.IO.Path.ChangeExtension(dstFile, null) + "_" + i.ToString("d5") + extension;
+                            string data = notationWriter.WriteToString(notations[i]);
+                            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dstFile2));
+                            System.IO.File.WriteAllText(dstFile2, data, Encoding.Default);
+                        }
+                    } else {
+                        string data = notationWriter.WriteToString(notations);
+                        System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dstFile));
+                        System.IO.File.WriteAllText(dstFile, data, Encoding.Default);
+                    }
                     WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 変換成功。");
                 } catch (Exception e) {
                     logger.Warn("棋譜読み込み失敗: " + srcFile, e);
