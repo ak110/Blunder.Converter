@@ -185,6 +185,11 @@ namespace ShogiCore.Converter {
             textBoxDst.Text = System.IO.Path.ChangeExtension(textBoxDst.Text, null); // 適当
         }
 
+        private void radioButtonConvertTypes_Checked(object sender, RoutedEventArgs e) {
+            if (radioButtonCombine != null && radioButtonCombine.IsChecked.Value)
+                textBoxDst.Text = System.IO.Path.ChangeExtension(textBoxDst.Text, GetSaveExtension());
+        }
+
         /// <summary>
         /// 保存する形式に応じた拡張子を返却する
         /// </summary>
