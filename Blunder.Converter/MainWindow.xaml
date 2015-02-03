@@ -19,7 +19,9 @@
                 <RadioButton Content="KIF" GroupName="ConvertType" Height="16" HorizontalAlignment="Left" Margin="121,79,0,0" Name="radioButtonKIF" VerticalAlignment="Top" Grid.Column="1" />
                 <RadioButton Content="SFEN" GroupName="ConvertType" Height="16" HorizontalAlignment="Left" Margin="69,79,0,0" Name="radioButtonSFEN" VerticalAlignment="Top" IsChecked="True" Grid.Column="1" />
                 <Button Content="変換" Height="23" HorizontalAlignment="Left" Margin="157,110,0,0" Name="button2" VerticalAlignment="Top" Width="75" IsDefault="False" Click="button2_Click" Grid.Column="1" />
-                <CheckBox Name="checkBoxDivide" Content="1棋譜1ファイルに分割(連番を付与)" Grid.Column="1" HorizontalAlignment="Left" Margin="265.329,84,0,0" VerticalAlignment="Top"/>
+                <RadioButton GroupName="OutputType" Name="radioButtonSeparated" Content="変換元のファイルの単位で変換先ファイルを作成" Grid.Column="1" HorizontalAlignment="Left" Margin="254.329,79,0,0" VerticalAlignment="Top" IsChecked="True"/>
+                <RadioButton GroupName="OutputType" Name="radioButtonDivide" Content="1棋譜1ファイルに分割(連番を付与)" Grid.Column="1" HorizontalAlignment="Left" Margin="254.329,99,0,0" VerticalAlignment="Top"/>
+                <RadioButton GroupName="OutputType" Name="radioButtonCombine" Content="全棋譜を1ファイルに結合" Grid.Column="1" HorizontalAlignment="Left" Margin="254.329,119,0,0" VerticalAlignment="Top" Checked="radioButtonCombine_Checked" Unchecked="radioButtonCombine_Unchecked" />
             </Grid>
         </GroupBox>
         <GroupBox Header="ログ" HorizontalAlignment="Left" Margin="10,189,0,0" VerticalAlignment="Top" Height="161" Width="619">

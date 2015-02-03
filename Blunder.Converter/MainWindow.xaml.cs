@@ -64,7 +64,7 @@ namespace ShogiCore.Converter {
             if (textBoxSrc.Text != path) {
                 textBoxSrc.Text = path;
             }
-            textBoxDst.Text = path + "_変換先";
+            textBoxDst.Text = path + "_変換先" + (radioButtonCombine.IsChecked.Value ? GetSaveExtension() : "");
         }
 
         /// <summary>
@@ -93,23 +93,29 @@ namespace ShogiCore.Converter {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void button2_Click(object sender, RoutedEventArgs e) {
+            int mode = 0;
+            if (radioButtonDivide.IsChecked.Value)
+                mode = 1;
+            else if (radioButtonCombine.IsChecked.Value)
+                mode = 2;
             if (radioButtonSFEN.IsChecked.Value) {
-                ConvertTo(new SFENNotationWriter(), ".sfen", checkBoxDivide.IsChecked.Value);
+                ConvertTo(new SFENNotationWriter(), ".sfen", mode);
             } else if (radioButtonKIF.IsChecked.Value) {
-                ConvertTo(new KifuNotationWriter(KifuNotationWriter.Mode.KIF), ".kif", checkBoxDivide.IsChecked.Value);
+                ConvertTo(new KifuNotationWriter(KifuNotationWriter.Mode.KIF), ".kif", mode);
             } else {
-                ConvertTo(new PCLNotationWriter(), ".csa", checkBoxDivide.IsChecked.Value);
+                ConvertTo(new PCLNotationWriter(), ".csa", mode);
             }
         }
 
         /// <summary>
         /// 棋譜変換
         /// </summary>
-        private void ConvertTo(IStringNotationWriter notationWriter, string extension, bool divide) {
+        private void ConvertTo(IStringNotationWriter notationWriter, string extension, int mode) {
             string srcDir = System.IO.Path.GetFullPath(textBoxSrc.Text);
             string dstDir = System.IO.Path.GetFullPath(textBoxDst.Text);
 
             textBoxLog.Clear();
+            List<Notation.Notation> allNotations = new List<Notation.Notation>();
             WriteLog("変換を開始します。");
 
             // 変換処理
@@ -118,28 +124,42 @@ namespace ShogiCore.Converter {
                 string dstFile = srcFile.Replace(srcDir, dstDir);
                 if (srcFile == dstFile) continue;
 
-                dstFile = System.IO.Path.ChangeExtension(dstFile, extension);
-
                 try {
                     string str = System.IO.File.ReadAllText(srcFile, Encoding.Default);
                     var notations = loader.Load(str);
-                    if (divide && 1 < notations.Count) {
+                    if (mode == 2) {
+                        // 1ファイルに結合
+                        allNotations.AddRange(notations);
+                        WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 読み込み成功");
+                    } else if (mode == 1 && 1 < notations.Count) {
+                        // 1棋譜1ファイルに分割
                         for (int i = 0; i < notations.Count; i++) {
+                            dstFile = System.IO.Path.ChangeExtension(dstFile, extension);
                             string dstFile2 = System.IO.Path.ChangeExtension(dstFile, null) + "_" + i.ToString("d5") + extension;
                             string data = notationWriter.WriteToString(notations[i]);
                             System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dstFile2));
                             System.IO.File.WriteAllText(dstFile2, data, Encoding.Default);
                         }
+                        WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 変換成功");
                     } else {
+                        // 元と先が１：１
+                        dstFile = System.IO.Path.ChangeExtension(dstFile, extension);
                         string data = notationWriter.WriteToString(notations);
                         System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dstFile));
                         System.IO.File.WriteAllText(dstFile, data, Encoding.Default);
+                        WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 変換成功");
                     }
-                    WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 変換成功。");
                 } catch (Exception e) {
                     logger.Warn("棋譜読み込み失敗: " + srcFile, e);
-                    WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 変換失敗。(" + e.Message + ")");
+                    WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 変換失敗 (" + e.Message + ")");
                 }
+            }
+
+            if (mode == 2) {
+                string data = notationWriter.WriteToString(allNotations);
+                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dstDir));
+                System.IO.File.WriteAllText(dstDir, data, Encoding.Default);
+                WriteLog(dstDir + ": 書き込み成功");
             }
 
             WriteLog("変換を終了しました。");
@@ -153,6 +173,28 @@ namespace ShogiCore.Converter {
             textBoxLog.AppendText(DateTime.Now.ToString("[yyyy/MM/dd HH:mm:ss.fff] ") + msg + Environment.NewLine);
             textBoxLog.ScrollToEnd();
             textBoxLog.Dispatcher.Invoke(new Action(() => { }), System.Windows.Threading.DispatcherPriority.Render);
+        }
+
+        private void radioButtonCombine_Checked(object sender, RoutedEventArgs e) {
+            label2.Content = "変換先ファイル：";
+            textBoxDst.Text = System.IO.Path.ChangeExtension(textBoxDst.Text, GetSaveExtension());
+        }
+
+        private void radioButtonCombine_Unchecked(object sender, RoutedEventArgs e) {
+            label2.Content = "変換先フォルダ：";
+            textBoxDst.Text = System.IO.Path.ChangeExtension(textBoxDst.Text, null); // 適当
+        }
+
+        /// <summary>
+        /// 保存する形式に応じた拡張子を返却する
+        /// </summary>
+        private string GetSaveExtension() {
+            if (radioButtonSFEN.IsChecked.Value)
+                return ".sfen";
+            else if (radioButtonKIF.IsChecked.Value)
+                return ".kif";
+            else
+                return ".csa";
         }
     }
 }
