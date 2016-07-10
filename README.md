@@ -1,5 +1,6 @@
 Blunder.Converter
 =================
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 
 棋譜変換ツール。
 
