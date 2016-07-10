@@ -1,0 +1,3 @@
+[submodule "ShogiCore"]
+	path = ShogiCore
+	url = https://github.com/ak110/ShogiCore

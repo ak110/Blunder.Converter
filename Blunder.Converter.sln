@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Windows Desktop
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blunder.Converter", "Blunder.Converter\Blunder.Converter.csproj", "{A9995F89-BD5F-4CD1-8F71-907E99BC0C3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShogiCore", "..\ShogiCore\ShogiCore\ShogiCore.csproj", "{42A35C23-9A76-4DD4-98ED-AA1EB3D757CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShogiCore", "ShogiCore\ShogiCore\ShogiCore.csproj", "{42A35C23-9A76-4DD4-98ED-AA1EB3D757CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShogiCoreTest", "ShogiCore\ShogiCoreTest\ShogiCoreTest.csproj", "{18CEDE68-8C61-48DC-A4A3-E0D8F8B8F064}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +23,10 @@ Global
 		{42A35C23-9A76-4DD4-98ED-AA1EB3D757CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42A35C23-9A76-4DD4-98ED-AA1EB3D757CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42A35C23-9A76-4DD4-98ED-AA1EB3D757CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18CEDE68-8C61-48DC-A4A3-E0D8F8B8F064}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18CEDE68-8C61-48DC-A4A3-E0D8F8B8F064}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18CEDE68-8C61-48DC-A4A3-E0D8F8B8F064}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18CEDE68-8C61-48DC-A4A3-E0D8F8B8F064}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

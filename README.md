@@ -16,7 +16,3 @@ Blunder.Converter
 - 無駄に.NET 4.0 (非Client Profile)です。
 - バグるときは盛大にバグります。
 
-
-最新バイナリ
-------
-https://github.com/ak110/Blunder.Converter/blob/master/Binary/Blunder.Converter.zip?raw=true
