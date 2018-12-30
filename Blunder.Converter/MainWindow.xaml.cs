@@ -120,39 +120,48 @@ namespace ShogiCore.Converter {
 
             // 変換処理
             NotationLoader loader = new NotationLoader();
-            foreach (string srcFile in System.IO.Directory.GetFiles(srcDir, "*", System.IO.SearchOption.AllDirectories)) {
-                string dstFile = srcFile.Replace(srcDir, dstDir);
-                if (srcFile == dstFile) continue;
+            try {
+                foreach (string srcFile in System.IO.Directory.EnumerateFiles(srcDir, "*", System.IO.SearchOption.AllDirectories)) {
+                    string dstFile = srcFile.Replace(srcDir, dstDir);
+                    if (srcFile == dstFile) continue;
 
-                try {
-                    string str = System.IO.File.ReadAllText(srcFile, Encoding.Default);
-                    var notations = loader.Load(str);
-                    if (mode == 2) {
-                        // 1ファイルに結合
-                        allNotations.AddRange(notations);
-                        WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 読み込み成功");
-                    } else if (mode == 1 && 1 < notations.Count) {
-                        // 1棋譜1ファイルに分割
-                        for (int i = 0; i < notations.Count; i++) {
+                    try {
+                        string str = System.IO.File.ReadAllText(srcFile, Encoding.Default);
+                        var notations = loader.Load(str);
+                        if (mode == 2) {
+                            // 1ファイルに結合
+                            allNotations.AddRange(notations);
+                            WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 読み込み成功");
+                        } else if (mode == 1 && 1 < notations.Count) {
+                            // 1棋譜1ファイルに分割
+                            for (int i = 0; i < notations.Count; i++) {
+                                dstFile = System.IO.Path.ChangeExtension(dstFile, extension);
+                                string dstFile2 = System.IO.Path.ChangeExtension(dstFile, null) + "_" + i.ToString("d5") + extension;
+                                string data = notationWriter.WriteToString(notations[i]);
+                                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dstFile2));
+                                System.IO.File.WriteAllText(dstFile2, data, Encoding.Default);
+                            }
+                            WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 変換成功");
+                        } else {
+                            // 元と先が１：１
                             dstFile = System.IO.Path.ChangeExtension(dstFile, extension);
-                            string dstFile2 = System.IO.Path.ChangeExtension(dstFile, null) + "_" + i.ToString("d5") + extension;
-                            string data = notationWriter.WriteToString(notations[i]);
-                            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dstFile2));
-                            System.IO.File.WriteAllText(dstFile2, data, Encoding.Default);
+                            string data = notationWriter.WriteToString(notations);
+                            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dstFile));
+                            System.IO.File.WriteAllText(dstFile, data, Encoding.Default);
+                            WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 変換成功");
                         }
-                        WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 変換成功");
-                    } else {
-                        // 元と先が１：１
-                        dstFile = System.IO.Path.ChangeExtension(dstFile, extension);
-                        string data = notationWriter.WriteToString(notations);
-                        System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dstFile));
-                        System.IO.File.WriteAllText(dstFile, data, Encoding.Default);
-                        WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 変換成功");
+                    } catch (Exception e) {
+                        logger.Warn("棋譜読み込み失敗: " + srcFile, e);
+                        WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 変換失敗 (" + e.Message + ")");
                     }
-                } catch (Exception e) {
-                    logger.Warn("棋譜読み込み失敗: " + srcFile, e);
-                    WriteLog(srcFile.Substring(srcDir.Length + 1) + ": 変換失敗 (" + e.Message + ")");
                 }
+            }
+            catch (System.IO.DirectoryNotFoundException e)
+            {
+                logger.Warn($"棋譜読み込み失敗: {srcDir}", e);
+                WriteLog($"{srcDir}: 読み込み失敗（{e.Message}）");
+                WriteLog("変換を終了しました。");
+                return;
             }
 
             if (mode == 2) {
